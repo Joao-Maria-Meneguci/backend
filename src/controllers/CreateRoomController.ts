@@ -7,6 +7,13 @@ export class CreateRoomController {
         private createRoomService: CreateRoomService
     ) {}
 
+    /**
+    * Create a new room via post method 
+    * 
+    * @param {Request} req Express request
+    * @param {Response} res Express response 
+    * @returns {Promise<Response>} Express response
+    */
     async handle(req: Request, res: Response) {
         const { name, description, singleBed, doubleBed, features, details }: IRoom = req.body;
 
