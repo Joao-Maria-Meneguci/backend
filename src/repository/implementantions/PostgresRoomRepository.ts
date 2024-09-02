@@ -28,6 +28,31 @@ export class PostgresRoomRepository {
         return mappedRoom;
     }
 
+    async findAll(): Promise<IRoom[]> {
+        const prisma = new PrismaClient();
+        const rooms = await prisma.room.findMany();
+
+        if (!rooms) {
+            prisma.$disconnect();
+            throw new CustomError(404, "Rooms not found");
+        }
+
+        const mappedRooms = rooms.map((room) => {
+            return {
+                id: room.id,
+                name: room.name,
+                description: room.description,
+                singleBed: room.singleBed,
+                doubleBed: room.doubleBed,
+                features: room.features as IRoom['features'],
+                details: room.details as IRoom['details']
+            };
+        });
+
+        prisma.$disconnect();
+        return mappedRooms;
+    }
+
     async delete(name: string): Promise<void> {
         const prisma = new PrismaClient();
         await prisma.room.delete({ where: { name } });

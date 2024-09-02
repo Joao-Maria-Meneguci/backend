@@ -4,6 +4,7 @@ import type { IRoom, IRoomUpdate } from "../models/types/IRoom";
 import type { GetRoomService } from "../services/GetRoomService/GetRoomService";
 import type { DeleteRoomService } from "../services/DeleteRoomService/DeleteRoomService";
 import type { UpdateRoomService } from "../services/UpdateRoomService/UpdateRoomService";
+import { GetAllRoomService } from "../services/GetAllRoomService/GetAllRoomService";
 
 export class RoomController {
     constructor(private options: {
@@ -11,7 +12,7 @@ export class RoomController {
         getRoomService?: GetRoomService,
         updateRoomService?: UpdateRoomService,
         deleteRoomService?: DeleteRoomService,
-
+        getAllRoomService?: GetAllRoomService
         }
     ) {}
 
@@ -58,6 +59,20 @@ export class RoomController {
             }
 
             return res.status(500).send();  
+        }
+    }
+
+    async getAllRooms(req: Request, res: Response): Promise<Response> {
+        try {
+            const rooms = await this.options.getAllRoomService!.execute();
+
+            return res.status(200).json(rooms);
+        } catch (error) {
+            if (error instanceof Error) {
+                return res.status(400).json({error: error.message});
+            }
+            
+            return res.status(500).send();
         }
     }
 
