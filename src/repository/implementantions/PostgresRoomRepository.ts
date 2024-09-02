@@ -1,3 +1,4 @@
+import { CustomError } from "../../errors/CustomError";
 import { Room } from "../../models/Room";
 import type { IRoom } from "../../models/types/IRoom";
 import { PrismaClient, Prisma } from "@prisma/client";
