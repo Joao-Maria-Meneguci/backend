@@ -1,4 +1,4 @@
-import { IRoom } from "./types/IRoom";
+import type { IRoom } from "./types/IRoom";
 
 export class Room implements IRoom {
     id?: number | undefined;
