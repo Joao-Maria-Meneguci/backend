@@ -1,5 +1,5 @@
-import { CustomError } from "../../errors/CustomError";
-import { IRoomRepository } from "../../repository/IRoomRepository";
+import { CustomError } from "../../../errors/CustomError";
+import { IRoomRepository } from "../../../repository/IRoomRepository";
 
 export class DeleteRoomService {
     constructor(

@@ -11,7 +11,7 @@ export class PostgresRoomRepository {
 
         if (!room) {
             prisma.$disconnect();
-            return;
+            throw new CustomError(404, "Room not found");
         }
 
         const mappedRoom: IRoom = {

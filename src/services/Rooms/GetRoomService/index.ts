@@ -1,5 +1,5 @@
-import { RoomController } from "../../controllers/RoomController";
-import { PostgresRoomRepository } from "../../repository/implementantions/PostgresRoomRepository";
+import { RoomController } from "../../../controllers/RoomController";
+import { PostgresRoomRepository } from "../../../repository/implementantions/PostgresRoomRepository";
 import { GetRoomService } from "./GetRoomService";
 
 const postgresRoomRepository = new PostgresRoomRepository();

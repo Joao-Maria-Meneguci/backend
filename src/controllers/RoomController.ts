@@ -1,10 +1,11 @@
 import type { Response, Request } from "express";
-import type { CreateRoomService } from "../services/CreateRoomService/CreateRoomService";
+import type { CreateRoomService } from "../services/Rooms/CreateRoomService/CreateRoomService";
 import type { IRoom, IRoomUpdate } from "../models/types/IRoom";
-import type { GetRoomService } from "../services/GetRoomService/GetRoomService";
-import type { DeleteRoomService } from "../services/DeleteRoomService/DeleteRoomService";
-import type { UpdateRoomService } from "../services/UpdateRoomService/UpdateRoomService";
-import { GetAllRoomService } from "../services/GetAllRoomService/GetAllRoomService";
+import type { GetRoomService } from "../services/Rooms/GetRoomService/GetRoomService";
+import type { DeleteRoomService } from "../services/Rooms/DeleteRoomService/DeleteRoomService";
+import type { UpdateRoomService } from "../services/Rooms/UpdateRoomService/UpdateRoomService";
+import { GetAllRoomService } from "../services/Rooms/GetAllRoomService/GetAllRoomService";
+import { CustomError } from "../errors/CustomError";
 
 export class RoomController {
     constructor(private options: {
@@ -54,8 +55,8 @@ export class RoomController {
 
             return res.status(200).json(room);
         } catch (error) {
-            if (error instanceof Error) {
-                return res.status(400).json({error: error.message});
+            if (error instanceof CustomError) {
+                return res.status(error.code).json({error: error.message});
             }
 
             return res.status(500).send();  
@@ -68,8 +69,8 @@ export class RoomController {
 
             return res.status(200).json(rooms);
         } catch (error) {
-            if (error instanceof Error) {
-                return res.status(400).json({error: error.message});
+            if (error instanceof CustomError) {
+                return res.status(error.code).json({error: error.message});
             }
             
             return res.status(500).send();
@@ -81,12 +82,12 @@ export class RoomController {
         const data = {name, newName, description, singleBed, doubleBed, features, details};
 
         try {
-            this.options.updateRoomService!.execute(data);
+            await this.options.updateRoomService!.execute(data);
 
             return res.status(200).json({message: `Room ${name} updated with success!`});
         } catch (error) {
-            if (error instanceof Error) {
-                return res.status(400).json({error: error.message});
+            if (error instanceof CustomError) {
+                return res.status(error.code).json({error: error.message});
             }
 
             return res.status(500).send();
@@ -111,9 +112,9 @@ export class RoomController {
             const room = await this.options.deleteRoomService!.execute(name);
 
             return res.status(200).json({message: `Room ${name} deleted with success!`});            
-        } catch (err) {
-            if (err instanceof Error) {
-                return res.status(400).json({error: err.message});
+        } catch (error) {
+            if (error instanceof CustomError) {
+                return res.status(error.code).json({error: error.message});
             }
 
             return res.status(500).send();

@@ -1,5 +1,5 @@
-import { IRoom } from "../../models/types/IRoom";
-import { PostgresRoomRepository } from "../../repository/implementantions/PostgresRoomRepository";
+import { IRoom } from "../../../models/types/IRoom";
+import { PostgresRoomRepository } from "../../../repository/implementantions/PostgresRoomRepository";
 
 export class GetAllRoomService {
     constructor(

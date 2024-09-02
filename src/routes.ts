@@ -1,12 +1,13 @@
 import { Router } from "express";
-import { createRoomController } from "./services/CreateRoomService";
-import { getRoomController } from "./services/GetRoomService";
-import { deleteRoomController } from "./services/DeleteRoomService";
-import { updateRoomController } from "./services/UpdateRoomService";
-import { getAllRoomController } from "./services/GetAllRoomService";
+import { createRoomController } from "./services/Rooms/CreateRoomService";
+import { getRoomController } from "./services/Rooms/GetRoomService";
+import { deleteRoomController } from "./services/Rooms/DeleteRoomService";
+import { updateRoomController } from "./services/Rooms/UpdateRoomService";
+import { getAllRoomController } from "./services/Rooms/GetAllRoomService";
 
 const router = Router();
 
+// Rooms routes
 router.post('/room', (req, res) => {
     return createRoomController.createRoom(req, res);
 })

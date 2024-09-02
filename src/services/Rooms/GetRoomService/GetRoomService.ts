@@ -1,4 +1,4 @@
-import { IRoomRepository } from "../../repository/IRoomRepository";
+import { IRoomRepository } from "../../../repository/IRoomRepository";
 
 export class GetRoomService {
     constructor(

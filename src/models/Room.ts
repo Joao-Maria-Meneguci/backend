@@ -1,6 +1,4 @@
-import { uuid } from "uuidv4";
 import { IRoom } from "./types/IRoom";
-import { Room as PrsimaRoom } from '@prisma/client'
 
 export class Room implements IRoom {
     id?: number | undefined;
