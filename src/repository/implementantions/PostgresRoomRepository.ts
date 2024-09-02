@@ -28,6 +28,14 @@ export class PostgresRoomRepository {
         return mappedRoom;
     }
 
+    async delete(name: string): Promise<void> {
+        const prisma = new PrismaClient();
+        await prisma.room.delete({ where: { name } });
+
+        prisma.$disconnect();
+        return;
+    }
+
     async save(room: Room) {
         const prisma = new PrismaClient();
         const { id, name, description, features, singleBed, doubleBed,  details } = room;

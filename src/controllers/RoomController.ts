@@ -2,11 +2,13 @@ import type { Response, Request } from "express";
 import type { CreateRoomService } from "../services/CreateRoomService/CreateRoomService";
 import type { IRoom } from "../models/types/IRoom";
 import type { GetRoomService } from "../services/GetRoomService/GetRoomService";
+import { DeleteRoomService } from "../services/DeleteRoomService/DeleteRoomService";
 
 export class RoomController {
     constructor(private options: {
         createRoomService?: CreateRoomService,
-        getRoomService?: GetRoomService
+        getRoomService?: GetRoomService,
+        deleteRoomService?: DeleteRoomService
         }
     ) {}
 
@@ -46,6 +48,26 @@ export class RoomController {
             }
 
             return res.status(500).send();  
+        }
+    }
+
+    async deleteRoom(req: Request, res: Response): Promise<Response> {
+        const { name, confirmName } = req.body;
+
+        if (name !== confirmName) {
+            return res.status(400).json({error: 'Names do not match!'});
+        }
+
+        try {
+            const room = await this.options.deleteRoomService!.execute(name);
+
+            return res.status(200).json({message: `Room ${name} deleted with success!`});            
+        } catch (err) {
+            if (err instanceof Error) {
+                return res.status(400).json({error: err.message});
+            }
+
+            return res.status(500).send();
         }
     }
 }
