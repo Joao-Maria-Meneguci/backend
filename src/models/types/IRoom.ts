@@ -1,5 +1,3 @@
-import type { Room as PrismaRoom } from "@prisma/client";
-
 export interface IRoom{
     id?: number;
     name: string;
@@ -21,4 +19,8 @@ export interface IRoom{
         checkOut: string;
         minimumStay: number;
     };
+}
+
+export interface IRoomUpdate extends IRoom{
+    newName?: string;
 }

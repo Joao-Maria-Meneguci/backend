@@ -1,6 +1,6 @@
 import { CustomError } from "../../errors/CustomError";
-import { Room } from "../../models/Room";
-import type { IRoom } from "../../models/types/IRoom";
+import type { Room } from "../../models/Room";
+import type { IRoom, IRoomUpdate } from "../../models/types/IRoom";
 import { PrismaClient, Prisma } from "@prisma/client";
 
 export class PostgresRoomRepository {
@@ -34,6 +34,21 @@ export class PostgresRoomRepository {
 
         prisma.$disconnect();
         return;
+    }
+
+    async update(name: IRoomUpdate['name'], data: Partial<IRoomUpdate>): Promise<void> {
+        const prisma = new PrismaClient();
+        const room = await this.findByName(name);
+        
+        if (!room) throw new CustomError(404, "Room not found");
+
+        const {newName, ...dataToUpdate} = data; 
+
+        await prisma.room.update({
+            where: { name },
+            data: { ...dataToUpdate, ...(newName && {name: newName}) },
+        })
+
     }
 
     async save(room: Room) {
