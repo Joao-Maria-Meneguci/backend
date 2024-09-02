@@ -1,4 +1,4 @@
-import { Room } from "../models/Room";
+import type { Room } from "../models/Room";
 
 export interface IRoomRepository {
     findByName(name: string): Promise<Room | undefined>;

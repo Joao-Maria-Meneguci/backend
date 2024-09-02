@@ -8,3 +8,8 @@ export interface  IUser {
     password: string;
     isAdmin?: boolean;
 }
+
+export interface IUserUpdate extends Omit<IUser, 'id'> {
+    newEmail?: string;
+    newPhone?: string;
+}
