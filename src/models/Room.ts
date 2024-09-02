@@ -3,7 +3,7 @@ import { IRoom } from "./types/IRoom";
 import { Room as PrsimaRoom } from '@prisma/client'
 
 export class Room implements IRoom {
-    id: string;
+    id?: number | undefined;
     name: string;
     description: string;
     singleBed: number;
@@ -18,6 +18,5 @@ export class Room implements IRoom {
         this.doubleBed = props.doubleBed;
         this.features = props.features;
         this.details = props.details;        
-        this.id = uuid();
     }
 }

@@ -1,31 +1,45 @@
-import { Room } from "@prisma/client";
-import { PrismaClient } from "@prisma/client";
+import { Room } from "../../models/Room";
+import type { IRoom } from "../../models/types/IRoom";
+import { PrismaClient, Prisma } from "@prisma/client";
 
 export class PostgresRoomRepository {
-    async findByName(name: string) {
+    async findByName(name: string): Promise<IRoom | undefined> {
         const prisma = new PrismaClient();
 
         const room = await prisma.room.findFirst({where: {name}})
 
-        if (room) {
-            throw new Error('exists');
+        if (!room) {
+            prisma.$disconnect();
+            return;
         }
 
+        const mappedRoom: IRoom = {
+            id: room.id,
+            name: room.name,
+            description: room.description,
+            singleBed: room.singleBed,
+            doubleBed: room.doubleBed,
+            features: room.features as IRoom['features'],
+            details: room.details as IRoom['details']
+        };
+
         prisma.$disconnect();
-        return room;
+        return mappedRoom;
     }
 
     async save(room: Room) {
         const prisma = new PrismaClient();
-        const { id, name, description, features, details } = room;
+        const { id, name, description, features, singleBed, doubleBed,  details } = room;
 
         await prisma.room.create({
             data: {
                 id,
                 name,
                 description,
-                features,
-                details,
+                singleBed,
+                doubleBed,
+                features: features || features as Prisma.InputJsonValue,
+                details: details || details as Prisma.InputJsonValue,
             },
         });
     }

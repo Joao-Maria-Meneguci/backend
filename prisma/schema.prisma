@@ -14,7 +14,7 @@ datasource db {
 }
 
 model Room { 
-  id String @id @unique
+  id Int @id @default(autoincrement())
   name String @unique
   description String
   singleBed Int

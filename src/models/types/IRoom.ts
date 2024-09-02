@@ -1,7 +1,7 @@
 import type { Room as PrismaRoom } from "@prisma/client";
 
-export interface IRoom extends PrismaRoom {
-    id: string;
+export interface IRoom{
+    id?: number;
     name: string;
     description: string;
     singleBed: number;
