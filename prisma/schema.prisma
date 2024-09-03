@@ -20,7 +20,8 @@ model Room {
   singleBed Int
   doubleBed Int
   features Json
-  details Json  
+  details Json
+  reservations Reservation[] 
 }
 
 model User {
@@ -32,4 +33,17 @@ model User {
   phone String @unique
   password String @unique
   isAdmin Boolean @default(false)
+  reservations Reservation[] 
+}
+
+model Reservation {
+  id Int @id @default(autoincrement())
+  startsAt DateTime
+  endsAt DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+  roomId Int
+  userId Int
+  room Room @relation(fields: [roomId], references: [id])
+  user User @relation(fields: [userId], references: [id])
 }

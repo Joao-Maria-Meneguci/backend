@@ -46,25 +46,5 @@ router.post('/user/login', (req, res) => {
     return userController.loginUser(req, res);
 })
 
-// Users routes
-router.post('/user', (req, res) => {
-    return userController.createUser(req, res);
-})
-
-router.get('/user/:email', (req, res) => {
-    return userController.getUser(req, res);
-})
-
-router.delete('/user', (req, res) => {
-    return userController.deleteUser(req, res);
-})
-
-router.put('/user', (req, res) => {
-    return userController.updateUser(req, res);
-})
-
-router.post('/user/login', (req, res) => {
-    return userController.loginUser(req, res);
-})
 
 export { router };
