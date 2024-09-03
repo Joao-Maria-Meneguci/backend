@@ -6,7 +6,7 @@ export class GetUserService {
         private userRepository: IUserRepository
     ) {}
 
-    async execute(email: string): Promise<User | undefined> {
-        return await this.userRepository.findByEmail(email);
+    async execute(email: string): Promise<Partial<User> | undefined> {
+        return await this.userRepository.getUser(email);
     }
 }

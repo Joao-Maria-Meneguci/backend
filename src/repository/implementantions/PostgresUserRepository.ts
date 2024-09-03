@@ -1,14 +1,14 @@
+import type { User } from "../../models/User";
+import type { IUserUpdate } from "../../models/types/IUser";
 import { PrismaClient } from "@prisma/client";
 import { CustomError } from "../../errors/CustomError";
-import type { User } from "../../models/User";
-import { IUserUpdate } from "../../models/types/IUser";
-import { where } from "@tensorflow/tfjs";
+import { hash, compare } from 'bcrypt';
 
 export class PostgresUserRepository {
 
-    async findByEmail(email: string): Promise<User | undefined> {
+    async getUser(email: string): Promise<Partial<User> | undefined> {
         const prisma = new PrismaClient();
-        const user = await prisma.user.findFirst({where: {email}});
+        const user = await prisma.user.findFirst({where: {email}, select: {name: true, cpf: true, rg: true, phone: true, email: true, password: false}});
 
         if (!user) {
             prisma.$disconnect();
@@ -20,30 +20,63 @@ export class PostgresUserRepository {
         return user;
     }
 
+    async loginUser(email: string, password: string): Promise<true | undefined> {
+        const prisma = new PrismaClient();
+
+        const user = await prisma.user.findFirst({where: {email}, select: {password: true}});
+        
+        if (!user) {
+            prisma.$disconnect();
+            throw new CustomError(404, "User not found");
+        }
+
+        if (!await compare( password, user.password || '')) {
+            prisma.$disconnect();
+            throw new CustomError(401, "Invalid password");
+        }
+
+        prisma.$disconnect();
+        return true;
+    }
+
     async save(user: User): Promise<void> {
         const prisma = new PrismaClient();
-        const userAlreadyExists = await prisma.user.findFirst({where: {email: user.email}});
-
-        const fieldsToCheck = ['cpf', 'rg', 'phone', 'email'] as Array<keyof User>;
+        const userAlreadyExists = await prisma.user.findFirst(
+            {
+                where: {email: user.email}, 
+                select: {name: false, cpf: true, rg: true, phone: true, email: true, password: false}
+            }) as Pick<User ,'cpf' | 'rg' | 'phone' | 'email'>;
 
         
-        if (fieldsToCheck.some(field => userAlreadyExists?.[field] === user[field])) {
+
+        const fieldsToCheck: Array<keyof Pick<User ,'cpf' | 'rg' | 'phone' | 'email'>> = ['cpf', 'rg', 'phone', 'email'];
+        
+        if (userAlreadyExists && fieldsToCheck.some(field => userAlreadyExists?.[field] === user[field])) {
             prisma.$disconnect();
             throw new CustomError(409, "User already exists");
         }
 
+        user.password = await hash(user.password, 10);
+
         await prisma.user.create({ data: user });
         prisma.$disconnect();
+        return;
     }
 
     async delete(email: string, password: string): Promise<void> {
         const prisma = new PrismaClient();
 
-        const userExists = await prisma.user.findFirst({where: {email, password}});
+        const userExists = await prisma.user.findFirst({where: {email}});
 
         if (!userExists) {
             prisma.$disconnect();
             throw new CustomError(404, "User not found");
+        }
+
+        const isPassCorrect = await compare(password, userExists.password);
+        if (!isPassCorrect) {
+            prisma.$disconnect();
+            throw new CustomError(401, "Invalid password");
         }
 
         await prisma.user.delete({ where: { email } });
@@ -53,9 +86,8 @@ export class PostgresUserRepository {
 
     async update(email: string, data: Partial<IUserUpdate>): Promise<void> {
         const prisma = new PrismaClient();
-        const userExists = await prisma.user.findFirst({where: {email}});
 
-        if (!userExists) {
+        if (!await prisma.user.findFirst({where: {email}})) {
             prisma.$disconnect();
             throw new CustomError(404, "User not found");
         }

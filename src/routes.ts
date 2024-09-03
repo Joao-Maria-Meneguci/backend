@@ -34,7 +34,7 @@ router.post('/user', (req, res) => {
     return roomController.createUser(req, res);
 })
 
-router.get('/user/:user', (req, res) => {
+router.get('/user/:email', (req, res) => {
     return roomController.getUser(req, res);
 })
 
@@ -44,6 +44,10 @@ router.delete('/user', (req, res) => {
 
 router.put('/user', (req, res) => {
     return roomController.updateUser(req, res);
+})
+
+router.post('/user/login', (req, res) => {
+    return roomController.loginUser(req, res);
 })
 
 export { router };
