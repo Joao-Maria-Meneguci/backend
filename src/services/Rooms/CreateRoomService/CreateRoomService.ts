@@ -9,12 +9,6 @@ export class CreateRoomService {
     ) {}
 
     async execute(data: IRoom) {
-        const roomAlreadyExists = await this.roomRepository.findByName(data.name);
-
-        if (roomAlreadyExists) {
-            throw new CustomError(409, 'exists');
-        }
-
         const room = new Room(data);    
 
         await this.roomRepository.save(room);

@@ -1,5 +1,4 @@
-import { CustomError } from "../../../errors/CustomError";
-import { IRoom, IRoomUpdate } from "../../../models/types/IRoom";
+import type { IRoomUpdate } from "../../../models/types/IRoom";
 import type { IRoomRepository } from "../../../repository/IRoomRepository";
 
 export class UpdateRoomService {

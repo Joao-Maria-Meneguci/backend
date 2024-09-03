@@ -80,6 +80,12 @@ export class PostgresRoomRepository {
         const prisma = new PrismaClient();
         const { id, name, description, features, singleBed, doubleBed,  details } = room;
 
+        const roomAlreadyExists = await prisma.room.findUnique({
+            where: { name },
+        });
+
+        if (roomAlreadyExists) throw new CustomError(409, "Room already exists");
+
         await prisma.room.create({
             data: {
                 id,
