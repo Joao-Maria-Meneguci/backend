@@ -15,6 +15,6 @@ const deleteUserService = new DeleteUserService(postgresUserRepository);
 const updateUserService = new UpdateUserService(postgresUserRepository);
 const loginUserService = new LoginUserService(postgresUserRepository);
 
-const roomController = new UserController({createUserService, getUserService, deleteUserService, updateUserService, loginUserService});
+const userController = new UserController({createUserService, getUserService, deleteUserService, updateUserService, loginUserService});
 
-export { roomController }
+export { userController }
